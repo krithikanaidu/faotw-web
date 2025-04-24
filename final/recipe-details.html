@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recipe Details || FAOTW</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon" />
+    <!-- normalize -->
+    <link rel="stylesheet" href="./css/normalize.css" />
+    <!-- font-awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+    <!-- main css -->
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body>
+    <!-- nav  -->
+    <nav class="navbar">
+      <div class="nav-center">
+        <div class="nav-header">
+          <a href="index.html" class="nav-logo">
+            <img src="./assets/logo.svg" alt="FAOTW" />
+          </a>
+          <button class="nav-btn btn">
+            <i class="fas fa-align-justify"></i>
+          </button>
+        </div>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link"> home </a>
+          <a href="about.html" class="nav-link"> about </a>
+          <a href="tags.html" class="nav-link"> tags </a>
+          <a href="recipes.html" class="nav-link"> recipes </a>
+          <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search recipes..." id="searchInput">
+            <button class="search-btn" id="searchBtn">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <div class="nav-link contact-link">
+            <a href="contact.html" class="btn"> contact </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- end of nav -->
+    <main class="page">
+      <div class="recipe-page">
+        <section class="recipe-hero">
+          <img
+            src=""
+            class="img recipe-hero-img"
+            alt=""
+            id="recipeImage"
+          />
+          <article class="recipe-info">
+            <h2 id="recipeTitle"></h2>
+            <p id="recipeSummary"></p>
+            <div class="recipe-icons">
+              <article>
+                <i class="fas fa-clock"></i>
+                <h5>prep time</h5>
+                <p id="prepTime"></p>
+              </article>
+              <article>
+                <i class="far fa-clock"></i>
+                <h5>cook time</h5>
+                <p id="cookTime"></p>
+              </article>
+              <article>
+                <i class="fas fa-user-friends"></i>
+                <h5>serving</h5>
+                <p id="servings"></p>
+              </article>
+            </div>
+            <p class="recipe-tags" id="recipeTags">
+              Tags : <span id="tagsList"></span>
+            </p>
+          </article>
+        </section>
+        <!-- content -->
+        <section class="recipe-content">
+          <article>
+            <h4>instructions</h4>
+            <div id="instructions"></div>
+          </article>
+          <article class="second-column">
+            <div>
+              <h4>ingredients</h4>
+              <div id="ingredients"></div>
+            </div>
+            <div>
+              <h4>tools</h4>
+              <p class="single-tool">Hand Blender</p>
+              <p class="single-tool">Large Heavy Pot With Lid</p>
+              <p class="single-tool">Measuring Spoons</p>
+              <p class="single-tool">Measuring Cups</p>
+            </div>
+          </article>
+        </section>
+      </div>
+    </main>
+    <!-- footer -->
+    <footer class="page-footer">
+      <p>
+        &copy; <span id="date"></span>
+        <span class="footer-logo">FAOTW</span> Built by Krithikanaidu
+      </p>
+    </footer>
+    <script>
+      // Get recipe ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const recipeId = urlParams.get('id');
+
+      // Spoonacular API Configuration
+      const API_KEY = '419ceef056db4bf0a2dfd5909b6bb61c';
+      const BASE_URL = 'https://api.spoonacular.com/recipes';
+
+      // Fetch recipe details
+      async function getRecipeDetails() {
+        try {
+          console.log('Fetching recipe details for ID:', recipeId);
+          const url = `${BASE_URL}/${recipeId}/information?apiKey=${API_KEY}`;
+          console.log('API URL:', url);
+          
+          const response = await fetch(url);
+          console.log('Response status:', response.status);
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          console.log('Recipe data received:', data);
+          
+          if (!data) {
+            throw new Error('No recipe data received');
+          }
+          
+          // Update the page with recipe details
+          if (data.image) {
+            document.getElementById('recipeImage').src = data.image;
+            document.getElementById('recipeImage').alt = data.title;
+          }
+          
+          if (data.title) {
+            document.getElementById('recipeTitle').textContent = data.title;
+          }
+          
+          if (data.summary) {
+            document.getElementById('recipeSummary').innerHTML = data.summary;
+          }
+          
+          if (data.preparationMinutes) {
+            document.getElementById('prepTime').textContent = `${data.preparationMinutes} min`;
+          }
+          
+          if (data.cookingMinutes) {
+            document.getElementById('cookTime').textContent = `${data.cookingMinutes} min`;
+          }
+          
+          if (data.servings) {
+            document.getElementById('servings').textContent = `${data.servings} servings`;
+          }
+          
+          // Display ingredients
+          const ingredientsList = document.getElementById('ingredients');
+          if (data.extendedIngredients && data.extendedIngredients.length > 0) {
+            data.extendedIngredients.forEach(ingredient => {
+              const ingredientElement = document.createElement('p');
+              ingredientElement.className = 'single-ingredient';
+              ingredientElement.textContent = `${ingredient.amount} ${ingredient.unit} ${ingredient.name}`;
+              ingredientsList.appendChild(ingredientElement);
+            });
+          } else {
+            ingredientsList.innerHTML = '<p>No ingredients information available</p>';
+          }
+          
+          // Display instructions
+          const instructionsList = document.getElementById('instructions');
+          if (data.analyzedInstructions && data.analyzedInstructions.length > 0) {
+            data.analyzedInstructions[0].steps.forEach(step => {
+              const stepElement = document.createElement('div');
+              stepElement.className = 'single-instruction';
+              stepElement.innerHTML = `
+                <header>
+                  <p>step ${step.number}</p>
+                  <div></div>
+                </header>
+                <p>${step.step}</p>
+              `;
+              instructionsList.appendChild(stepElement);
+            });
+          } else {
+            instructionsList.innerHTML = '<p>No instructions available</p>';
+          }
+          
+          // Display tags
+          const tagsList = document.getElementById('tagsList');
+          if (data.diets && data.diets.length > 0) {
+            data.diets.forEach(diet => {
+              const tagElement = document.createElement('a');
+              tagElement.href = `tag-template.html?category=${diet}`;
+              tagElement.textContent = diet;
+              tagsList.appendChild(tagElement);
+              tagsList.appendChild(document.createTextNode(' '));
+            });
+          } else {
+            tagsList.innerHTML = '<span>No tags available</span>';
+          }
+          
+        } catch (error) {
+          console.error('Error fetching recipe details:', error);
+          document.querySelector('.recipe-page').innerHTML = `
+            <div class="error">
+              <p>An error occurred while loading the recipe: ${error.message}</p>
+              <p>Please try again later or contact support if the problem persists.</p>
+            </div>
+          `;
+        }
+      }
+
+      // Call the function when the page loads
+      if (recipeId) {
+        getRecipeDetails();
+      } else {
+        document.querySelector('.recipe-page').innerHTML = `
+          <div class="error">
+            <p>No recipe ID provided. Please select a recipe to view.</p>
+          </div>
+        `;
+      }
+    </script>
+    <script src="./js/app.js"></script>
+  </body>
+</html> 

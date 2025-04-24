@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recipe Template || Final</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon" />
+    <!-- normalize -->
+    <link rel="stylesheet" href="./css/normalize.css" />
+    <!-- font-awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+    <!-- main css -->
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body>
+    <!-- nav  -->
+    <nav class="navbar">
+      <div class="nav-center">
+        <div class="nav-header">
+          <a href="index.html" class="nav-logo">
+            <img src="./assets/logo.svg" alt="simply recipes" />
+          </a>
+          <button class="nav-btn btn">
+            <i class="fas fa-align-justify"></i>
+          </button>
+        </div>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link"> home </a>
+          <a href="about.html" class="nav-link"> about </a>
+          <a href="tags.html" class="nav-link"> tags </a>
+          <a href="recipes.html" class="nav-link"> recipes </a>
+
+          <div class="nav-link contact-link">
+            <a href="contact.html" class="btn"> contact </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- end of nav -->
+    <main class="page">
+      <div class="featured-recipes">
+        <h4 id="category-title">Category</h4>
+          <!-- recipes list -->
+        <div class="recipes-list" id="recipes-container">
+          <!-- Recipes will be loaded dynamically based on category -->
+        </div>
+        <!-- end of recipe list -->
+      </div>
+    </main>
+    <!-- footer -->
+    <footer class="page-footer">
+      <p>
+        &copy; <span id="date"></span>
+        <span class="footer-logo">SimplyRecipes</span> Built by Krithikanaidu</a>
+      </p>
+    </footer>
+    <script>
+      // Recipe data for each category
+      const recipesByCategory = {
+        'vegetarian': [
+          { name: 'Palak Paneer', image: './assets/recipes/palak-paneer.jpg', prep: '15min', cook: '20min', link: 'palakpaneer.html' },
+          { name: 'Chana Masala', image: './assets/recipes/chana-masala.jpg', prep: '15min', cook: '25min', link: 'chana-masala.html' },
+          { name: 'Vegetable Biryani', image: './assets/recipes/biryani.jpg', prep: '20min', cook: '40min', link: 'biryani.html' }
+        ],
+        'non-vegetarian': [
+          { name: 'Butter Chicken', image: './assets/recipes/butter-chicken.jpg', prep: '20min', cook: '30min', link: 'butter-chicken.html' }
+        ],
+        'curry': [
+          { name: 'Palak Paneer', image: './assets/recipes/palak-paneer.jpg', prep: '15min', cook: '20min', link: 'palakpaneer.html' },
+          { name: 'Butter Chicken', image: './assets/recipes/butter-chicken.jpg', prep: '20min', cook: '30min', link: 'butter-chicken.html' },
+          { name: 'Chana Masala', image: './assets/recipes/chana-masala.jpg', prep: '15min', cook: '25min', link: 'chana-masala.html' }
+        ],
+        'bread': [
+          { name: 'Garlic Naan', image: './assets/recipes/naan.jpg', prep: '10min', cook: '15min', link: 'naan.html' }
+        ],
+        'desserts': [
+          { name: 'Gulab Jamun', image: './assets/recipes/gulab-jamun.jpg', prep: '15min', cook: '20min', link: 'gulab-jamun.html' }
+        ]
+      };
+
+      // Get category from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const category = urlParams.get('category');
+
+      // Update page title and content
+      if (category && recipesByCategory[category]) {
+        document.getElementById('category-title').textContent = category.charAt(0).toUpperCase() + category.slice(1);
+        
+        const recipesContainer = document.getElementById('recipes-container');
+        recipesContainer.innerHTML = recipesByCategory[category]
+          .map(recipe => `
+            <a href="${recipe.link}" class="recipe">
+              <img src="${recipe.image}" class="img recipe-img" alt="${recipe.name}" />
+              <h5>${recipe.name}</h5>
+              <p>Prep : ${recipe.prep} | Cook : ${recipe.cook}</p>
+            </a>
+          `)
+          .join('');
+      }
+    </script>
+    <script src="./js/app.js"></script>
+  </body>
+</html>

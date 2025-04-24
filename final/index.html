@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FAOTW || Final</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon" />
+    <!-- normalize -->
+    <link rel="stylesheet" href="./css/normalize.css" />
+    <!-- font-awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+    <!-- main css -->
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body>
+    <!-- nav  -->
+    <nav class="navbar">
+      <div class="nav-center">
+        <div class="nav-header">
+          <a href="index.html" class="nav-logo">
+            <img src="./assets/logo.svg" alt="FAOTW" />
+          </a>
+          <button class="nav-btn btn">
+            <i class="fas fa-align-justify"></i>
+          </button>
+        </div>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link"> home </a>
+          <a href="about.html" class="nav-link"> about </a>
+          <a href="tags.html" class="nav-link"> tags </a>
+          <a href="recipes.html" class="nav-link"> recipes </a>
+          <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search recipes..." id="searchInput">
+            <button class="search-btn" id="searchBtn">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <div class="nav-link contact-link">
+            <a href="contact.html" class="btn"> contact </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- end of nav -->
+    <!-- main -->
+    <main class="page">
+      <!-- header -->
+      <header class="hero">
+        <div class="hero-container">
+          <div class="hero-text">
+            <h1>Food All Over The World</h1>
+            <h4>no fluff, just recipes</h4>
+          </div>
+        </div>
+      </header>
+      <!-- end of header -->
+      <section class="recipes-container">
+        <!-- tag container -->
+        <div class="tags-container">
+          <h4>recipes</h4>
+          <div class="tags-list" id="tags-list">
+            <!-- Tags will be loaded dynamically -->
+          </div>
+        </div>
+        <!-- end of tag container -->
+        <!-- recipes list -->
+        <div class="recipes-list">
+          <!-- single recipe -->
+          <a href="palakpaneer.html" class="recipe">
+            <img
+              src="./assets/recipes/palak-paneer.jpg"
+              class="img recipe-img"
+              alt=""
+            />
+            <h5>Palak Paneer</h5>
+            <p>Prep : 15min | Cook : 20min</p>
+          </a>
+          <!-- end of single recipe -->
+          <!-- single recipe -->
+          <a href="butter-chicken.html" class="recipe">
+            <img
+              src="./assets/recipes/butter-chicken.jpg"
+              class="img recipe-img"
+              alt=""
+            />
+            <h5>Butter Chicken</h5>
+            <p>Prep : 20min | Cook : 30min</p>
+          </a>
+          <!-- end of single recipe -->
+          <!-- single recipe -->
+          <a href="chana-masala.html" class="recipe">
+            <img
+              src="./assets/recipes/chana-masala.jpg"
+              class="img recipe-img"
+              alt=""
+            />
+            <h5>Chana Masala</h5>
+            <p>Prep : 15min | Cook : 25min</p>
+          </a>
+          <!-- end of single recipe -->
+          <!-- single recipe -->
+          <a href="naan.html" class="recipe">
+            <img
+              src="./assets/recipes/naan.jpg"
+              class="img recipe-img"
+              alt=""
+            />
+            <h5>Garlic Naan</h5>
+            <p>Prep : 10min | Cook : 15min</p>
+          </a>
+          <!-- end of single recipe -->
+          <!-- single recipe -->
+          <a href="biryani.html" class="recipe">
+            <img
+              src="./assets/recipes/biryani.jpg"
+              class="img recipe-img"
+              alt=""
+            />
+            <h5>Vegetable Biryani</h5>
+            <p>Prep : 20min | Cook : 40min</p>
+          </a>
+          <!-- end of single recipe -->
+          <!-- single recipe -->
+          <a href="gulab-jamun.html" class="recipe">
+            <img
+              src="./assets/recipes/gulab-jamun.jpg"
+              class="img recipe-img"
+              alt=""
+            />
+            <h5>Gulab Jamun</h5>
+            <p>Prep : 15min | Cook : 20min</p>
+          </a>
+          <!-- end of single recipe -->
+        </div>
+        <!-- end of recipes list -->
+      </section>
+    </main>
+    <!-- end of main -->
+    <!-- footer -->
+    <footer class="page-footer">
+      <p>
+        &copy; <span id="date"></span>
+        <span class="footer-logo">FAOTW</span> Built by Krithikanaidu
+      </p>
+    </footer>
+    <script>
+      // Recipe categories data
+      const categories = [
+        { name: 'Vegetarian', count: 3, link: 'tag-template.html?category=vegetarian' },
+        { name: 'Non-Vegetarian', count: 2, link: 'tag-template.html?category=non-vegetarian' },
+        { name: 'Curries', count: 3, link: 'tag-template.html?category=curry' },
+        { name: 'Breads', count: 2, link: 'tag-template.html?category=bread' },
+        { name: 'Desserts', count: 1, link: 'tag-template.html?category=desserts' }
+      ];
+
+      // Load tags dynamically
+      const tagsList = document.getElementById('tags-list');
+      tagsList.innerHTML = categories
+        .map(category => `<a href="${category.link}">${category.name} (${category.count})</a>`)
+        .join('');
+    </script>
+    <script src="./js/app.js"></script>
+    <script src="./js/search.js"></script>
+  </body>
+</html>
