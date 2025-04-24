@@ -8,16 +8,37 @@ const searchBtn = document.getElementById('searchBtn');
 
 // Debug function
 function log(message) {
-    console.log(message);
-    // You can also display this in the UI if needed
+    console.log(`[Search] ${message}`);
+}
+
+// Store recent searches
+function storeRecentSearch(recipe) {
+    try {
+        let recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+        
+        // Remove if already exists
+        recentSearches = recentSearches.filter(item => item.id !== recipe.id);
+        
+        // Add to beginning of array
+        recentSearches.unshift(recipe);
+        
+        // Keep only last 6 searches
+        if (recentSearches.length > 6) {
+            recentSearches = recentSearches.slice(0, 6);
+        }
+        
+        localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+        log(`Stored recent search: ${recipe.title}`);
+    } catch (error) {
+        log(`Error storing recent search: ${error.message}`);
+    }
 }
 
 // Search function
 async function searchRecipes(query) {
-    log(`Searching for: ${query}`);
-    
     try {
-        const url = `${BASE_URL}/complexSearch?apiKey=${API_KEY}&query=${query}&number=10`;
+        log(`Searching for: ${query}`);
+        const url = `${BASE_URL}/complexSearch?apiKey=${API_KEY}&query=${encodeURIComponent(query)}&number=10`;
         log(`API URL: ${url}`);
         
         const response = await fetch(url);
@@ -28,17 +49,26 @@ async function searchRecipes(query) {
         }
         
         const data = await response.json();
-        log(`Received ${data.results?.length || 0} results`);
+        log(`Received ${data.results.length} results`);
         
-        if (data.results && data.results.length > 0) {
-            displayResults(data.results);
-        } else {
-            displayNoResults();
+        if (data.results.length === 0) {
+            throw new Error('No recipes found');
         }
+        
+        // Store each recipe as a recent search
+        data.results.forEach(recipe => {
+            storeRecentSearch({
+                id: recipe.id,
+                title: recipe.title,
+                image: recipe.image,
+                readyInMinutes: recipe.readyInMinutes
+            });
+        });
+        
+        return data.results;
     } catch (error) {
-        console.error('Error fetching recipes:', error);
-        log(`Error: ${error.message}`);
-        displayError();
+        log(`Error searching recipes: ${error.message}`);
+        throw error;
     }
 }
 
@@ -52,11 +82,12 @@ function displayResults(recipes) {
     recipes.forEach(recipe => {
         const recipeCard = document.createElement('div');
         recipeCard.className = 'recipe-card';
+        recipeCard.onclick = () => showRecipeDetails(recipe.id);
         recipeCard.innerHTML = `
             <img src="${recipe.image}" alt="${recipe.title}">
             <h3>${recipe.title}</h3>
             <p>Ready in ${recipe.readyInMinutes} minutes</p>
-            <a href="recipe-details.html?id=${recipe.id}" class="btn" target="_blank">View Recipe</a>
+            <button class="btn">View Recipe</button>
         `;
         resultsContainer.appendChild(recipeCard);
     });
@@ -84,11 +115,11 @@ function displayNoResults() {
 }
 
 // Display error message
-function displayError() {
-    log('Error occurred');
+function displayError(message) {
+    log(`Error: ${message}`);
     const error = document.createElement('div');
     error.className = 'error';
-    error.innerHTML = '<p>An error occurred while searching. Please try again later.</p>';
+    error.innerHTML = `<p>${message}</p>`;
     
     const existingResults = document.querySelector('.search-results');
     if (existingResults) {
@@ -102,10 +133,16 @@ if (searchInput && searchBtn) {
     log('Search elements found');
     
     // Event Listeners
-    searchBtn.addEventListener('click', () => {
+    searchBtn.addEventListener('click', async () => {
         const query = searchInput.value.trim();
         if (query) {
-            searchRecipes(query);
+            try {
+                const results = await searchRecipes(query);
+                displayResults(results);
+            } catch (error) {
+                log(`Search error: ${error.message}`);
+                displayError(error.message);
+            }
         } else {
             log('Empty search query');
         }
@@ -115,7 +152,7 @@ if (searchInput && searchBtn) {
         if (e.key === 'Enter') {
             const query = searchInput.value.trim();
             if (query) {
-                searchRecipes(query);
+                searchBtn.click();
             } else {
                 log('Empty search query');
             }

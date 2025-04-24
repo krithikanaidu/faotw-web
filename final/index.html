@@ -25,23 +25,23 @@
           <a href="index.html" class="nav-logo">
             <img src="./assets/logo.svg" alt="FAOTW" />
           </a>
-          <button class="nav-btn btn">
+          <button class="nav-btn">
             <i class="fas fa-align-justify"></i>
           </button>
         </div>
         <div class="nav-links">
-          <a href="index.html" class="nav-link"> home </a>
-          <a href="about.html" class="nav-link"> about </a>
-          <a href="tags.html" class="nav-link"> tags </a>
-          <a href="recipes.html" class="nav-link"> recipes </a>
+          <a href="index.html" class="nav-link">home</a>
+          <a href="about.html" class="nav-link">about</a>
+          <a href="tags.html" class="nav-link">tags</a>
+          <a href="recipes.html" class="nav-link">recipes</a>
           <div class="search-container">
             <input type="text" class="search-input" placeholder="Search recipes..." id="searchInput">
             <button class="search-btn" id="searchBtn">
               <i class="fas fa-search"></i>
             </button>
           </div>
-          <div class="nav-link contact-link">
-            <a href="contact.html" class="btn"> contact </a>
+          <div class="contact-link">
+            <a href="contact.html" class="btn">contact</a>
           </div>
         </div>
       </div>
@@ -68,77 +68,72 @@
           </div>
         </div>
         <!-- end of tag container -->
-        <!-- recipes list -->
-        <div class="recipes-list">
-          <!-- single recipe -->
-          <a href="palakpaneer.html" class="recipe">
-            <img
-              src="./assets/recipes/palak-paneer.jpg"
-              class="img recipe-img"
-              alt=""
-            />
-            <h5>Palak Paneer</h5>
-            <p>Prep : 15min | Cook : 20min</p>
-          </a>
-          <!-- end of single recipe -->
-          <!-- single recipe -->
-          <a href="butter-chicken.html" class="recipe">
-            <img
-              src="./assets/recipes/butter-chicken.jpg"
-              class="img recipe-img"
-              alt=""
-            />
-            <h5>Butter Chicken</h5>
-            <p>Prep : 20min | Cook : 30min</p>
-          </a>
-          <!-- end of single recipe -->
-          <!-- single recipe -->
-          <a href="chana-masala.html" class="recipe">
-            <img
-              src="./assets/recipes/chana-masala.jpg"
-              class="img recipe-img"
-              alt=""
-            />
-            <h5>Chana Masala</h5>
-            <p>Prep : 15min | Cook : 25min</p>
-          </a>
-          <!-- end of single recipe -->
-          <!-- single recipe -->
-          <a href="naan.html" class="recipe">
-            <img
-              src="./assets/recipes/naan.jpg"
-              class="img recipe-img"
-              alt=""
-            />
-            <h5>Garlic Naan</h5>
-            <p>Prep : 10min | Cook : 15min</p>
-          </a>
-          <!-- end of single recipe -->
-          <!-- single recipe -->
-          <a href="biryani.html" class="recipe">
-            <img
-              src="./assets/recipes/biryani.jpg"
-              class="img recipe-img"
-              alt=""
-            />
-            <h5>Vegetable Biryani</h5>
-            <p>Prep : 20min | Cook : 40min</p>
-          </a>
-          <!-- end of single recipe -->
-          <!-- single recipe -->
-          <a href="gulab-jamun.html" class="recipe">
-            <img
-              src="./assets/recipes/gulab-jamun.jpg"
-              class="img recipe-img"
-              alt=""
-            />
-            <h5>Gulab Jamun</h5>
-            <p>Prep : 15min | Cook : 20min</p>
-          </a>
-          <!-- end of single recipe -->
+        <!-- recently searched recipes -->
+        <div class="recent-searches">
+          <h4>Recently Searched</h4>
+          <div class="recipes-list" id="recent-recipes">
+            <!-- Recently searched recipes will be loaded here -->
+            <div class="no-recent-searches">
+              <p>No recent searches yet. Start searching for recipes above!</p>
+            </div>
+          </div>
         </div>
-        <!-- end of recipes list -->
+        <!-- end of recently searched recipes -->
       </section>
+      <!-- recipe details section -->
+      <section class="recipe-details-section" id="recipeDetails" style="display: none;">
+        <div class="recipe-page">
+          <section class="recipe-hero">
+            <img src="" class="img recipe-hero-img" alt="" id="recipeImage" />
+            <article class="recipe-info">
+              <h2 id="recipeTitle"></h2>
+              <p id="recipeSummary"></p>
+              <div class="recipe-icons">
+                <article>
+                  <i class="fas fa-clock"></i>
+                  <h5>prep time</h5>
+                  <p id="prepTime"></p>
+                </article>
+                <article>
+                  <i class="far fa-clock"></i>
+                  <h5>cook time</h5>
+                  <p id="cookTime"></p>
+                </article>
+                <article>
+                  <i class="fas fa-user-friends"></i>
+                  <h5>serving</h5>
+                  <p id="servings"></p>
+                </article>
+              </div>
+              <p class="recipe-tags" id="recipeTags">
+                Tags : <span id="tagsList"></span>
+              </p>
+            </article>
+          </section>
+          <!-- content -->
+          <section class="recipe-content">
+            <article>
+              <h4>instructions</h4>
+              <div id="instructions"></div>
+            </article>
+            <article class="second-column">
+              <div>
+                <h4>ingredients</h4>
+                <div id="ingredients"></div>
+              </div>
+              <div>
+                <h4>tools</h4>
+                <p class="single-tool">Hand Blender</p>
+                <p class="single-tool">Large Heavy Pot With Lid</p>
+                <p class="single-tool">Measuring Spoons</p>
+                <p class="single-tool">Measuring Cups</p>
+              </div>
+            </article>
+          </section>
+        </div>
+        <button class="btn back-to-home" onclick="hideRecipeDetails()">Back to Home</button>
+      </section>
+      <!-- end of recipe details section -->
     </main>
     <!-- end of main -->
     <!-- footer -->
@@ -163,6 +158,100 @@
       tagsList.innerHTML = categories
         .map(category => `<a href="${category.link}">${category.name} (${category.count})</a>`)
         .join('');
+
+      // Toggle mobile menu
+      const navBtn = document.querySelector('.nav-btn');
+      const navLinks = document.querySelector('.nav-links');
+
+      navBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('show-links');
+      });
+
+      // Handle recent searches
+      function displayRecentSearches() {
+        const recentRecipes = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+        const recentRecipesContainer = document.getElementById('recent-recipes');
+        
+        if (recentRecipes.length === 0) {
+          recentRecipesContainer.innerHTML = `
+            <div class="no-recent-searches">
+              <p>No recent searches yet. Start searching for recipes above!</p>
+            </div>
+          `;
+          return;
+        }
+
+        recentRecipesContainer.innerHTML = recentRecipes
+          .map(recipe => `
+            <div class="recipe" onclick="showRecipeDetails(${recipe.id})">
+              <img src="${recipe.image}" class="img recipe-img" alt="${recipe.title}" />
+              <h5>${recipe.title}</h5>
+              <p>Ready in ${recipe.readyInMinutes} minutes</p>
+            </div>
+          `)
+          .join('');
+      }
+
+      // Display recent searches when page loads
+      displayRecentSearches();
+
+      // Show recipe details
+      async function showRecipeDetails(recipeId) {
+        try {
+          const response = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=419ceef056db4bf0a2dfd5909b6bb61c`);
+          const data = await response.json();
+          
+          // Update recipe details
+          document.getElementById('recipeImage').src = data.image;
+          document.getElementById('recipeImage').alt = data.title;
+          document.getElementById('recipeTitle').textContent = data.title;
+          document.getElementById('recipeSummary').innerHTML = data.summary;
+          document.getElementById('prepTime').textContent = `${data.preparationMinutes} min`;
+          document.getElementById('cookTime').textContent = `${data.cookingMinutes} min`;
+          document.getElementById('servings').textContent = `${data.servings} servings`;
+          
+          // Update ingredients
+          const ingredientsList = document.getElementById('ingredients');
+          ingredientsList.innerHTML = data.extendedIngredients
+            .map(ingredient => `<p class="single-ingredient">${ingredient.amount} ${ingredient.unit} ${ingredient.name}</p>`)
+            .join('');
+          
+          // Update instructions
+          const instructionsList = document.getElementById('instructions');
+          instructionsList.innerHTML = data.analyzedInstructions[0].steps
+            .map(step => `
+              <div class="single-instruction">
+                <header>
+                  <p>step ${step.number}</p>
+                  <div></div>
+                </header>
+                <p>${step.step}</p>
+              </div>
+            `)
+            .join('');
+          
+          // Update tags
+          const tagsList = document.getElementById('tagsList');
+          tagsList.innerHTML = data.diets
+            .map(diet => `<a href="tag-template.html?category=${diet}">${diet}</a>`)
+            .join(' ');
+          
+          // Show recipe details section
+          document.getElementById('recipeDetails').style.display = 'block';
+          document.querySelector('.recipes-container').style.display = 'none';
+          
+          // Scroll to top
+          window.scrollTo(0, 0);
+        } catch (error) {
+          console.error('Error fetching recipe details:', error);
+        }
+      }
+
+      // Hide recipe details
+      function hideRecipeDetails() {
+        document.getElementById('recipeDetails').style.display = 'none';
+        document.querySelector('.recipes-container').style.display = 'block';
+      }
     </script>
     <script src="./js/app.js"></script>
     <script src="./js/search.js"></script>
